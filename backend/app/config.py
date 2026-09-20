@@ -23,5 +23,5 @@ class Config:
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(days=7)
     
     # Gemini AI Configuration
-    GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', 'AQ.Ab8RN6KXwnrCREuAkOecAdFQGAxGyRbmDtLLLstoHmWpuJQOtg')
+    GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 
