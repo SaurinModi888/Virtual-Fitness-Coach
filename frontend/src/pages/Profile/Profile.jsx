@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { User, Weight, Ruler, Activity, Target, Save, CheckCircle2 } from 'lucide-react';
+import { User, Save, CheckCircle2 } from 'lucide-react';
 
 const Profile = () => {
   const { user, updateProfile } = useAuth();
@@ -29,10 +29,10 @@ const Profile = () => {
   };
 
   const getBMICategory = (bmi) => {
-    if (bmi < 18.5) return { cat: 'Underweight', color: 'info' };
-    if (bmi < 25.0) return { cat: 'Normal weight', color: 'success' };
-    if (bmi < 30.0) return { cat: 'Overweight', color: 'warning' };
-    return { cat: 'Obese', color: 'danger' };
+    if (bmi < 18.5) return { cat: 'Underweight', color: 'bg-info text-white' };
+    if (bmi < 25.0) return { cat: 'Normal weight', color: 'bg-success text-white' };
+    if (bmi < 30.0) return { cat: 'Overweight', color: 'bg-warning text-dark' };
+    return { cat: 'Obese', color: 'bg-danger text-white' };
   };
 
   const handleSubmit = async (e) => {
@@ -61,8 +61,8 @@ const Profile = () => {
     <div className="container py-4">
       <div className="d-flex align-items-center justify-content-between mb-4">
         <div>
-          <h2 className="fw-bold text-white mb-1 d-flex align-items-center gap-2">
-            <User className="text-primary" size={28} /> Member Profile & Biometrics
+          <h2 className="fw-bold text-uppercase text-purple-theme mb-1 d-flex align-items-center gap-2">
+            <User className="text-primary" size={28} /> MEMBER PROFILE & BIOMETRICS
           </h2>
           <p className="text-secondary fs-7 mb-0">
             Manage your personal parameters to calibrate AI workout recommendations.
@@ -73,12 +73,12 @@ const Profile = () => {
       <div className="row g-4">
         {/* Profile Edit Form */}
         <div className="col-12 col-lg-8">
-          <div className="card border-0 rounded-4 shadow-sm bg-dark-glass p-4">
-            <h5 className="fw-bold text-white mb-4">Update Biometrics</h5>
+          <div className="card card-theme p-4 border-0 shadow-sm">
+            <h5 className="fw-bold text-uppercase text-dark mb-4">Update Biometrics</h5>
 
             {savedSuccess && (
-              <div className="alert alert-success bg-success bg-opacity-20 text-success border-0 rounded-3 p-3 mb-4 d-flex align-items-center gap-2">
-                <CheckCircle2 size={20} />
+              <div className="alert alert-success bg-light text-success border rounded-3 p-3 mb-4 d-flex align-items-center gap-2 fs-7">
+                <CheckCircle2 size={18} />
                 <span>Biometrics updated successfully!</span>
               </div>
             )}
@@ -86,31 +86,31 @@ const Profile = () => {
             <form onSubmit={handleSubmit}>
               <div className="row g-3 mb-4">
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Username</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Username</label>
                   <input
                     type="text"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-muted"
+                    className="form-control bg-light border text-secondary"
                     value={user?.username || ''}
                     disabled
                   />
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Email Address</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Email Address</label>
                   <input
                     type="email"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-muted"
+                    className="form-control bg-light border text-secondary"
                     value={user?.email || ''}
                     disabled
                   />
                 </div>
 
                 <div className="col-4">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Age</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Age</label>
                   <input
                     type="number"
                     name="age"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-control bg-white border text-dark"
                     value={formData.age}
                     onChange={handleChange}
                     required
@@ -118,12 +118,12 @@ const Profile = () => {
                 </div>
 
                 <div className="col-4">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Weight (kg)</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Weight (kg)</label>
                   <input
                     type="number"
                     step="0.5"
                     name="weight"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-control bg-white border text-dark"
                     value={formData.weight}
                     onChange={handleChange}
                     required
@@ -131,11 +131,11 @@ const Profile = () => {
                 </div>
 
                 <div className="col-4">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Height (cm)</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Height (cm)</label>
                   <input
                     type="number"
                     name="height"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-control bg-white border text-dark"
                     value={formData.height}
                     onChange={handleChange}
                     required
@@ -143,10 +143,10 @@ const Profile = () => {
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Fitness Level</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Fitness Level</label>
                   <select
                     name="fitness_level"
-                    className="form-select bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-select bg-white border text-dark"
                     value={formData.fitness_level}
                     onChange={handleChange}
                   >
@@ -157,10 +157,10 @@ const Profile = () => {
                 </div>
 
                 <div className="col-12 col-md-6">
-                  <label className="form-label text-secondary fs-7 fw-semibold">Primary Goal</label>
+                  <label className="form-label text-dark fs-7 fw-semibold">Primary Goal</label>
                   <select
                     name="goal"
-                    className="form-select bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-select bg-white border text-dark"
                     value={formData.goal}
                     onChange={handleChange}
                   >
@@ -174,7 +174,7 @@ const Profile = () => {
 
               <button
                 type="submit"
-                className="btn btn-primary rounded-pill px-5 py-2-5 fw-bold shadow hover-lift d-inline-flex align-items-center gap-2"
+                className="btn btn-blue-action px-5 py-2-5 fw-bold text-uppercase d-inline-flex align-items-center gap-2 shadow-sm"
                 disabled={saving}
               >
                 {saving ? (
@@ -182,7 +182,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <Save size={18} />
-                    <span>Save Biometric Profile</span>
+                    <span>SAVE BIOMETRIC PROFILE</span>
                   </>
                 )}
               </button>
@@ -192,25 +192,25 @@ const Profile = () => {
 
         {/* Live BMI Calculation Badge */}
         <div className="col-12 col-lg-4">
-          <div className="card border-0 rounded-4 shadow-sm bg-dark-glass p-4 text-center h-100 d-flex flex-column justify-content-center">
-            <h5 className="fw-bold text-white mb-2">Live BMI Score</h5>
-            <p className="text-secondary fs-7 mb-4">Body Mass Index derived from your current metrics</p>
+          <div className="card card-theme p-4 text-center h-100 d-flex flex-column justify-content-center border-0 shadow-sm">
+            <h5 className="fw-bold text-uppercase text-dark mb-2">Live BMI Score</h5>
+            <p className="text-secondary fs-7 mb-4">Calculated from your weight and height metrics</p>
 
             <div className="my-auto">
-              <div className="display-3 fw-bold text-white mb-2">{bmiVal}</div>
-              <span className={`badge bg-${bmiInfo.color} bg-opacity-25 text-${bmiInfo.color} fs-6 px-4 py-2 rounded-pill fw-semibold`}>
+              <div className="display-3 fw-bold text-dark mb-2">{bmiVal}</div>
+              <span className={`badge ${bmiInfo.color} fs-6 px-4 py-2 rounded-pill fw-semibold`}>
                 {bmiInfo.cat}
               </span>
             </div>
 
-            <div className="mt-4 pt-3 border-top border-secondary border-opacity-25 text-start text-muted fs-7">
+            <div className="mt-4 pt-3 border-top text-start text-secondary fs-7">
               <div className="d-flex justify-content-between mb-1">
                 <span>Healthy Range:</span>
-                <span className="text-white fw-semibold">18.5 – 24.9</span>
+                <span className="text-dark fw-semibold">18.5 – 24.9</span>
               </div>
               <div className="d-flex justify-content-between">
                 <span>Daily Target Calories:</span>
-                <span className="text-warning fw-semibold">~2,100 kcal</span>
+                <span className="text-success fw-semibold">~2,100 kcal</span>
               </div>
             </div>
           </div>

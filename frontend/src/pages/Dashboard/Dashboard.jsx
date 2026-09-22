@@ -3,15 +3,13 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { trackerAPI, wellnessAPI, workoutAPI } from '../../services/api';
 import StatCard from '../../components/StatCard';
-import { Flame, Trophy, Activity, Heart, Sparkles, Play, ArrowRight, Smile, Meh, Frown, CheckCircle } from 'lucide-react';
+import { Flame, Trophy, Activity, Heart, Sparkles, Play, ArrowRight, Smile, Meh, Frown, CheckCircle, LayoutGrid } from 'lucide-react';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const [summary, setSummary] = useState(null);
   const [recentLogs, setRecentLogs] = useState([]);
-  const [moodRating, setMoodRating] = useState(4);
   const [moodLogged, setMoodLogged] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchDashboardData();
@@ -19,7 +17,6 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      setLoading(true);
       const [sumRes, historyRes] = await Promise.all([
         trackerAPI.getSummary(),
         workoutAPI.getHistory()
@@ -27,14 +24,11 @@ const Dashboard = () => {
       setSummary(sumRes.data);
       setRecentLogs(historyRes.data.slice(0, 4));
     } catch (err) {
-      console.error("Dashboard error:", err);
-    } finally {
-      setLoading(false);
+      console.error("Dashboard data load error:", err);
     }
   };
 
   const handleQuickMoodLog = async (score) => {
-    setMoodRating(score);
     try {
       await wellnessAPI.logMood({ mood_rating: score, stress_level: 'Moderate' });
       setMoodLogged(true);
@@ -44,56 +38,114 @@ const Dashboard = () => {
     }
   };
 
-  const getBMIBadgeColor = (cat) => {
-    if (cat === 'Normal weight') return 'success';
-    if (cat === 'Overweight') return 'warning';
-    return 'info';
-  };
-
   return (
     <div className="container py-4">
-      {/* Header Banner */}
-      <div className="card border-0 rounded-4 shadow-lg bg-gradient-primary text-white p-4 p-md-5 mb-4 position-relative overflow-hidden">
-        <div className="position-relative z-1 row align-items-center">
-          <div className="col-lg-8">
-            <span className="badge bg-white bg-opacity-25 text-white mb-2 px-3 py-1 rounded-pill fs-7 fw-semibold">
-              <Sparkles size={14} className="me-1" color="currentColor" /> Virtual Coach Active
-            </span>
-            <h1 className="display-5 fw-bold mb-2">Welcome, {user?.username || 'Athlete'}!</h1>
-            <p className="fs-6 opacity-90 mb-3" style={{ maxWidth: '580px' }}>
-              Your current health target is set to <strong className="text-warning">{user?.goal}</strong>. You are on a <span className="fw-bold">{summary?.current_streak_days || 0}-day streak</span>!
+      {/* 1. MAIN HERO SECTION (Exact layout from user screenshot) */}
+      <div className="card card-theme p-4 p-md-5 mb-4 border-0 shadow-sm overflow-hidden bg-white">
+        <div className="row align-items-center g-4">
+          {/* Left Hero Content */}
+          <div className="col-12 col-lg-6">
+            <h1 className="fw-extrabold text-dark display-6 text-uppercase mb-3 tracking-tight" style={{ letterSpacing: '-0.02em', lineHeight: '1.2' }}>
+              SOLUTIONS FOR PERSONALIZED FITNESS GROWTH
+            </h1>
+            <p className="text-secondary fw-medium fs-7 text-uppercase mb-4 pe-lg-3" style={{ lineHeight: '1.6', color: '#475569' }}>
+              "GUIDING YOU TO A STRONGER, HEALTHIER YOU WITH PERSONALIZED PLANS, EXPERT ADVICE, AND THE DEDICATION TO ACHIEVE YOUR GOALS."
             </p>
-            <div className="d-flex flex-wrap gap-3">
-              <Link to="/workout-generator" className="btn btn-light text-primary rounded-pill px-4 py-2 fw-bold shadow hover-lift d-inline-flex align-items-center gap-2">
-                <Play size={18} color="currentColor" /> Generate Today's Workout
+            <div className="d-flex flex-wrap align-items-center gap-3">
+              <Link to="/workout-generator" className="btn btn-blue-pill shadow-sm d-inline-flex align-items-center gap-2">
+                <Play size={16} fill="currentColor" /> Generate Today's Routine
               </Link>
-              <Link to="/wellness" className="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold hover-lift d-inline-flex align-items-center gap-2">
-                <Heart size={18} color="currentColor" /> Mindful Reset
+              <Link to="/profile" className="btn btn-white-pill d-inline-flex align-items-center gap-2">
+                <span>View Biometrics ({user?.bmi || '22.0'} BMI)</span>
               </Link>
             </div>
           </div>
-          <div className="col-lg-4 d-none d-lg-block text-center position-relative">
-            <div className="p-4 bg-white bg-opacity-10 rounded-4 backdrop-blur border border-white border-opacity-25 shadow text-start">
-              <div className="d-flex align-items-center justify-content-between mb-2">
-                <span className="text-white opacity-75 fs-7 fw-semibold">Biometrics Index</span>
-                <span className={`badge bg-${getBMIBadgeColor(user?.bmi_category)} rounded-pill`}>
-                  {user?.bmi_category}
-                </span>
-              </div>
-              <div className="d-flex align-items-baseline gap-2">
-                <span className="display-6 fw-bold">{user?.bmi || 22.0}</span>
-                <span className="fs-7 opacity-75">BMI Score</span>
-              </div>
-              <div className="mt-3 pt-2 border-top border-white border-opacity-15 d-flex justify-content-between text-white fs-7 opacity-90">
-                <span>Weight: {user?.weight} kg</span>
-                <span>Height: {user?.height} cm</span>
-              </div>
+
+          {/* Right Hero Graphic */}
+          <div className="col-12 col-lg-6 text-center">
+            <div className="p-2 rounded-4 bg-light border border-light shadow-sm d-inline-block w-100 max-w-lg">
+              <img
+                src="/Hero Section-2.png"
+                alt="FITNESS COACH"
+                className="img-fluid rounded-3"
+                style={{ maxHeight: '280px', objectFit: 'contain' }}
+                onError={(e) => {
+                  e.target.src = '/Hero Section-1.jpeg';
+                }}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Metrics Row */}
+      {/* 2. CALL-TO-ACTION LIME HIGHLIGHT BANNER */}
+      <div className="lime-banner-card p-3 p-md-4 mb-4 shadow-sm d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+        <div className="d-flex align-items-center gap-3">
+          <img
+            src="/NavBar-Logo.jpg"
+            alt="Logo"
+            className="rounded bg-white p-1 border"
+            style={{ height: '48px', objectFit: 'contain' }}
+          />
+          <h4 className="fw-bold text-uppercase mb-0 text-dark" style={{ letterSpacing: '0.02em' }}>
+            CONVERT YOUR DREAMS INTO ACTIONS
+          </h4>
+        </div>
+        <Link to="/workout-generator" className="btn btn-white-pill text-nowrap d-flex align-items-center gap-2 shadow-sm">
+          <LayoutGrid size={16} className="text-primary" />
+          <span>Get started</span>
+        </Link>
+      </div>
+
+      {/* 3. THREE CORE HUB CARDS (From user screenshot) */}
+      <div className="row g-4 mb-4">
+        {/* Card 1: FITNESS PLANNING */}
+        <div className="col-12 col-md-4">
+          <div className="card card-theme-subtle h-100 p-4 text-center d-flex flex-column hover-lift">
+            <h5 className="fw-bold text-uppercase text-purple-theme mb-3 text-decoration-underline" style={{ letterSpacing: '0.05em' }}>
+              FITNESS PLANNING
+            </h5>
+            <p className="text-secondary fs-7 mb-4 flex-grow-1" style={{ color: '#475569' }}>
+              Utilize the power of "FITNESS COACH" that meets your "LIFE GOALS".
+            </p>
+            <Link to="/workout-generator" className="btn btn-white-pill w-100 fw-semibold text-uppercase fs-7">
+              Explore Generator
+            </Link>
+          </div>
+        </div>
+
+        {/* Card 2: MIND AND BODY WELLNESS */}
+        <div className="col-12 col-md-4">
+          <div className="card card-theme-subtle h-100 p-4 text-center d-flex flex-column hover-lift">
+            <h5 className="fw-bold text-uppercase text-purple-theme mb-3 text-decoration-underline" style={{ letterSpacing: '0.05em' }}>
+              MIND AND BODY WELLNESS
+            </h5>
+            <p className="text-secondary fs-7 mb-4 flex-grow-1" style={{ color: '#475569' }}>
+              Holistic approach integrating both mental and physical wellness, including meditation and recovery plans.
+            </p>
+            <Link to="/wellness" className="btn btn-white-pill w-100 fw-semibold text-uppercase fs-7">
+              Open Wellness Studio
+            </Link>
+          </div>
+        </div>
+
+        {/* Card 3: FITNESS RESOURCE */}
+        <div className="col-12 col-md-4">
+          <div className="card card-theme-subtle h-100 p-4 text-center d-flex flex-column hover-lift">
+            <h5 className="fw-bold text-uppercase text-purple-theme mb-3 text-decoration-underline" style={{ letterSpacing: '0.05em' }}>
+              FITNESS RESOURCE
+            </h5>
+            <p className="text-secondary fs-7 mb-4 flex-grow-1" style={{ color: '#475569' }}>
+              Blog posts with expert tips, analytics trajectory, and advice.
+            </p>
+            <Link to="/progress" className="btn btn-white-pill w-100 fw-semibold text-uppercase fs-7">
+              View Analytics Log
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. USER METRICS ROW */}
       <div className="row g-3 mb-4">
         <div className="col-12 col-sm-6 col-xl-3">
           <StatCard
@@ -122,146 +174,113 @@ const Dashboard = () => {
             unit="kcal"
             icon={Activity}
             color="warning"
-            subtext="Estimated total expenditure"
+            subtext="Estimated expenditure"
           />
         </div>
         <div className="col-12 col-sm-6 col-xl-3">
           <StatCard
-            title="Weekly Goal"
+            title="Weekly Progress"
             value={`${summary?.weekly_progress_pct || 0}%`}
             unit={`(${summary?.weekly_workouts_completed || 0}/4)`}
             icon={Sparkles}
             color="info"
-            subtext="Weekly target progress"
+            subtext="Target target completion"
           />
         </div>
       </div>
 
-      {/* Middle Grid: Recommended Workout + Mood Check-In */}
-      <div className="row g-4 mb-4">
-        {/* Recommended Today's Workout */}
-        <div className="col-12 col-lg-7">
-          <div className="card border-0 rounded-4 shadow-sm bg-dark-glass h-100 p-4">
-            <div className="d-flex align-items-center justify-content-between mb-3">
-              <h5 className="fw-bold text-white mb-0 d-flex align-items-center gap-2">
-                <Flame className="text-primary" size={22} color="currentColor" /> Today's AI Recommendation
-              </h5>
-              <span className="badge bg-primary bg-opacity-25 text-primary rounded-pill px-3 py-1">
-                {user?.fitness_level || 'Intermediate'} Level
-              </span>
+      {/* 5. RECENT ACTIVITY LOG & MOOD CHECK-IN */}
+      <div className="row g-4">
+        <div className="col-12 col-lg-8">
+          <div className="card card-theme p-4 h-100 border-0 shadow-sm">
+            <div className="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+              <h5 className="fw-bold text-uppercase text-purple-theme mb-0">Recent Activity Logs</h5>
+              <Link to="/progress" className="text-primary text-decoration-none fs-7 fw-bold">View History →</Link>
             </div>
-            <p className="text-secondary fs-7 mb-4">
-              Based on your goal ({user?.goal}), our AI coach recommends a high-efficiency session targeting full body stability.
-            </p>
-            <div className="bg-dark p-3 rounded-3 border border-secondary border-opacity-25 mb-4">
-              <div className="d-flex align-items-center justify-content-between">
-                <div>
-                  <h6 className="fw-bold text-white mb-1">Full Body Power & Core Burn</h6>
-                  <span className="text-muted fs-7 me-3">⏱ 20 Minutes</span>
-                  <span className="text-muted fs-7 me-3">🔥 ~170 kcal</span>
-                  <span className="text-muted fs-7">🏋️ Bodyweight</span>
-                </div>
-                <Link to="/workout-generator" className="btn btn-primary rounded-circle p-3 d-flex align-items-center justify-content-center shadow">
-                  <Play size={20} />
-                </Link>
+
+            {recentLogs.length === 0 ? (
+              <div className="text-center py-4 text-muted fs-7">
+                No workouts logged yet. Generate your first routine above!
               </div>
-            </div>
-            <div className="mt-auto d-flex justify-content-between align-items-center text-muted fs-7">
-              <span>Ready to transform your day?</span>
-              <Link to="/workout-generator" className="text-primary text-decoration-none fw-semibold d-flex align-items-center gap-1">
-                Customize Workout <ArrowRight size={16} />
-              </Link>
-            </div>
+            ) : (
+              <div className="table-responsive">
+                <table className="table table-hover align-middle mb-0">
+                  <thead className="table-light fs-7 text-uppercase text-secondary">
+                    <tr>
+                      <th>Date</th>
+                      <th>Routine Name</th>
+                      <th>Target Muscle</th>
+                      <th>Duration</th>
+                      <th>Calories</th>
+                    </tr>
+                  </thead>
+                  <tbody className="fs-7">
+                    {recentLogs.map((log) => (
+                      <tr key={log.id}>
+                        <td className="text-secondary">{log.date}</td>
+                        <td className="fw-semibold text-dark">{log.workout_name}</td>
+                        <td>
+                          <span className="badge bg-light text-dark border rounded-pill px-3">
+                            {log.target_muscle}
+                          </span>
+                        </td>
+                        <td className="text-secondary">{log.duration_minutes} mins</td>
+                        <td className="fw-semibold text-success">🔥 {log.calories_burned} kcal</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Quick Mood Check-In */}
-        <div className="col-12 col-lg-5">
-          <div className="card border-0 rounded-4 shadow-sm bg-dark-glass h-100 p-4">
-            <h5 className="fw-bold text-white mb-2 d-flex align-items-center gap-2">
-              <Heart className="text-danger" size={22} /> Daily Mood Check-In
-            </h5>
-            <p className="text-secondary fs-7 mb-3">
-              Mental resilience is key to athletic performance. How are you feeling right now?
-            </p>
+        {/* Quick Mood Logger */}
+        <div className="col-12 col-lg-4">
+          <div className="card card-theme p-4 h-100 border-0 shadow-sm text-center d-flex flex-column justify-content-between">
+            <div>
+              <h5 className="fw-bold text-uppercase text-purple-theme mb-2 d-flex align-items-center justify-content-center gap-2">
+                <Heart className="text-danger" size={20} /> Daily Mood Check-In
+              </h5>
+              <p className="text-secondary fs-7 mb-3">
+                Log your state of mind to tune recovery plans.
+              </p>
+            </div>
 
             {moodLogged ? (
-              <div className="alert alert-success bg-success bg-opacity-20 text-success border-0 rounded-3 p-3 text-center my-auto">
-                <CheckCircle size={28} className="mb-2" />
-                <div className="fw-bold">Mood Logged!</div>
-                <div className="fs-7">Your mental wellness stats have been updated.</div>
+              <div className="alert alert-success bg-light text-success border rounded-3 p-3 my-auto">
+                <CheckCircle size={24} className="mb-1" />
+                <div className="fw-bold fs-7">Mood Logged!</div>
               </div>
             ) : (
-              <div className="d-flex justify-content-around my-auto py-3 bg-dark rounded-3 border border-secondary border-opacity-25">
+              <div className="d-flex justify-content-around my-auto py-3 bg-light rounded-3 border">
                 {[
-                  { score: 1, label: 'Exhausted', icon: Frown, color: 'danger' },
-                  { score: 3, label: 'Balanced', icon: Meh, color: 'warning' },
-                  { score: 5, label: 'Energized', icon: Smile, color: 'success' }
+                  { score: 1, label: 'Low', icon: Frown, color: 'text-danger' },
+                  { score: 3, label: 'Balanced', icon: Meh, color: 'text-warning' },
+                  { score: 5, label: 'Great', icon: Smile, color: 'text-success' }
                 ].map((item) => {
                   const IconComp = item.icon;
                   return (
                     <button
                       key={item.score}
                       onClick={() => handleQuickMoodLog(item.score)}
-                      className="btn btn-link text-decoration-none text-center p-2 hover-scale"
+                      className="btn btn-link text-decoration-none p-1 hover-lift"
                     >
-                      <div className={`p-3 rounded-circle bg-${item.color} bg-opacity-15 text-${item.color} mb-1 mx-auto`}>
-                        <IconComp size={24} />
+                      <div className={`p-2 rounded-circle bg-white shadow-sm ${item.color} mb-1 mx-auto`}>
+                        <IconComp size={22} />
                       </div>
-                      <div className="text-muted fs-8 fw-semibold">{item.label}</div>
+                      <div className="text-dark fs-8 fw-semibold">{item.label}</div>
                     </button>
                   );
                 })}
               </div>
             )}
-            <div className="mt-3 text-center text-muted fs-7">
-              Average weekly mood score: <strong className="text-white">{summary?.average_mood_score || 4.0} / 5.0</strong>
+
+            <div className="mt-3 text-muted fs-8">
+              Weekly Avg: <strong className="text-dark">{summary?.average_mood_score || 4.0} / 5.0</strong>
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Recent Activity Log */}
-      <div className="card border-0 rounded-4 shadow-sm bg-dark-glass p-4">
-        <div className="d-flex align-items-center justify-content-between mb-3">
-          <h5 className="fw-bold text-white mb-0">Recent Activity Logs</h5>
-          <Link to="/progress" className="text-primary text-decoration-none fs-7 fw-semibold">View All History</Link>
-        </div>
-
-        {recentLogs.length === 0 ? (
-          <div className="text-center py-4 text-muted fs-7">
-            No workouts logged yet. Generate your first routine above!
-          </div>
-        ) : (
-          <div className="table-responsive">
-            <table className="table table-dark table-hover align-middle mb-0 bg-transparent">
-              <thead>
-                <tr className="text-muted fs-7">
-                  <th>Date</th>
-                  <th>Workout Name</th>
-                  <th>Target Muscle</th>
-                  <th>Duration</th>
-                  <th>Calories</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentLogs.map((log) => (
-                  <tr key={log.id}>
-                    <td className="text-secondary fs-7">{log.date}</td>
-                    <td className="fw-semibold text-white">{log.workout_name}</td>
-                    <td>
-                      <span className="badge bg-secondary bg-opacity-25 text-light rounded-pill">
-                        {log.target_muscle}
-                      </span>
-                    </td>
-                    <td className="text-secondary fs-7">{log.duration_minutes} mins</td>
-                    <td className="text-warning fw-semibold fs-7">🔥 {log.calories_burned} kcal</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
     </div>
   );

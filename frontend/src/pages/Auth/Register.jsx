@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Dumbbell, ArrowRight, User, Mail, Lock, Activity, Target, Weight, Ruler } from 'lucide-react';
+import { ArrowRight, User, Mail, Lock } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -40,19 +40,22 @@ const Register = () => {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center py-5 px-3 bg-gradient-dark">
-      <div className="card border-0 rounded-4 shadow-lg bg-dark-glass overflow-hidden w-100" style={{ maxWidth: '640px' }}>
+    <div className="min-vh-100 d-flex align-items-center justify-content-center py-5 px-3 bg-light">
+      <div className="card card-theme border-0 shadow-lg overflow-hidden w-100 bg-white" style={{ maxWidth: '640px' }}>
         <div className="card-body p-4 p-md-5">
           <div className="text-center mb-4">
-            <div className="d-inline-flex bg-primary bg-opacity-25 text-primary p-3 rounded-circle mb-3 shadow-glow">
-              <Dumbbell size={32} />
-            </div>
-            <h3 className="fw-bold text-white mb-1">Create Your Profile</h3>
-            <p className="text-muted fs-7">Tailor your workouts and biometrics with Virtual Fitness Coach</p>
+            <img
+              src="/NavBar-Logo.jpg"
+              alt="FITNESS COACH"
+              className="rounded bg-white p-1 border mb-3"
+              style={{ height: '60px', objectFit: 'contain' }}
+            />
+            <h3 className="fw-bold text-dark text-uppercase mb-1">CREATE YOUR PROFILE</h3>
+            <p className="text-secondary fs-7">Personalized workout planning with Virtual Fitness Coach</p>
           </div>
 
           {error && (
-            <div className="alert alert-danger bg-danger bg-opacity-15 border-danger border-opacity-25 text-danger rounded-3 fs-7 mb-4">
+            <div className="alert alert-danger bg-light text-danger border rounded-3 fs-7 mb-4">
               {error}
             </div>
           )}
@@ -60,15 +63,15 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="row g-3 mb-4">
               <div className="col-12 col-md-6">
-                <label className="form-label text-secondary fs-7 fw-semibold">Username</label>
+                <label className="form-label text-dark fs-7 fw-semibold">Username</label>
                 <div className="input-group">
-                  <span className="input-group-text bg-dark border-secondary border-opacity-50 text-muted">
+                  <span className="input-group-text bg-light border-end-0 text-secondary">
                     <User size={18} />
                   </span>
                   <input
                     type="text"
                     name="username"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-control bg-white border border-start-0 text-dark"
                     placeholder="johndoe"
                     value={formData.username}
                     onChange={handleChange}
@@ -78,15 +81,15 @@ const Register = () => {
               </div>
 
               <div className="col-12 col-md-6">
-                <label className="form-label text-secondary fs-7 fw-semibold">Email Address</label>
+                <label className="form-label text-dark fs-7 fw-semibold">Email Address</label>
                 <div className="input-group">
-                  <span className="input-group-text bg-dark border-secondary border-opacity-50 text-muted">
+                  <span className="input-group-text bg-light border-end-0 text-secondary">
                     <Mail size={18} />
                   </span>
                   <input
                     type="email"
                     name="email"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-control bg-white border border-start-0 text-dark"
                     placeholder="john@example.com"
                     value={formData.email}
                     onChange={handleChange}
@@ -96,15 +99,15 @@ const Register = () => {
               </div>
 
               <div className="col-12">
-                <label className="form-label text-secondary fs-7 fw-semibold">Password</label>
+                <label className="form-label text-dark fs-7 fw-semibold">Password</label>
                 <div className="input-group">
-                  <span className="input-group-text bg-dark border-secondary border-opacity-50 text-muted">
+                  <span className="input-group-text bg-light border-end-0 text-secondary">
                     <Lock size={18} />
                   </span>
                   <input
                     type="password"
                     name="password"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                    className="form-control bg-white border border-start-0 text-dark"
                     placeholder="Minimum 6 characters"
                     value={formData.password}
                     onChange={handleChange}
@@ -113,14 +116,14 @@ const Register = () => {
                 </div>
               </div>
 
-              <hr className="my-3 border-secondary border-opacity-25" />
+              <hr className="my-3 text-secondary" />
 
               <div className="col-4">
-                <label className="form-label text-secondary fs-7 fw-semibold">Age</label>
+                <label className="form-label text-dark fs-7 fw-semibold">Age</label>
                 <input
                   type="number"
                   name="age"
-                  className="form-control bg-dark border-secondary border-opacity-50 text-white"
+                  className="form-control bg-white border text-dark"
                   min="12"
                   max="100"
                   value={formData.age}
@@ -130,39 +133,35 @@ const Register = () => {
               </div>
 
               <div className="col-4">
-                <label className="form-label text-secondary fs-7 fw-semibold">Weight (kg)</label>
-                <div className="input-group">
-                  <input
-                    type="number"
-                    step="0.5"
-                    name="weight"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
-                    value={formData.weight}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                <label className="form-label text-dark fs-7 fw-semibold">Weight (kg)</label>
+                <input
+                  type="number"
+                  step="0.5"
+                  name="weight"
+                  className="form-control bg-white border text-dark"
+                  value={formData.weight}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="col-4">
-                <label className="form-label text-secondary fs-7 fw-semibold">Height (cm)</label>
-                <div className="input-group">
-                  <input
-                    type="number"
-                    name="height"
-                    className="form-control bg-dark border-secondary border-opacity-50 text-white"
-                    value={formData.height}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+                <label className="form-label text-dark fs-7 fw-semibold">Height (cm)</label>
+                <input
+                  type="number"
+                  name="height"
+                  className="form-control bg-white border text-dark"
+                  value={formData.height}
+                  onChange={handleChange}
+                  required
+                />
               </div>
 
               <div className="col-12 col-md-6">
-                <label className="form-label text-secondary fs-7 fw-semibold">Fitness Level</label>
+                <label className="form-label text-dark fs-7 fw-semibold">Fitness Level</label>
                 <select
                   name="fitness_level"
-                  className="form-select bg-dark border-secondary border-opacity-50 text-white"
+                  className="form-select bg-white border text-dark"
                   value={formData.fitness_level}
                   onChange={handleChange}
                 >
@@ -173,10 +172,10 @@ const Register = () => {
               </div>
 
               <div className="col-12 col-md-6">
-                <label className="form-label text-secondary fs-7 fw-semibold">Primary Health Goal</label>
+                <label className="form-label text-dark fs-7 fw-semibold">Primary Goal</label>
                 <select
                   name="goal"
-                  className="form-select bg-dark border-secondary border-opacity-50 text-white"
+                  className="form-select bg-white border text-dark"
                   value={formData.goal}
                   onChange={handleChange}
                 >
@@ -188,21 +187,21 @@ const Register = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-100 rounded-pill py-2-5 fw-semibold d-flex align-items-center justify-content-center gap-2 mb-4 shadow" disabled={loading}>
+            <button type="submit" className="btn btn-blue-action w-100 py-2-5 fw-bold text-uppercase d-flex align-items-center justify-content-center gap-2 mb-4 shadow-sm" disabled={loading}>
               {loading ? (
                 <span className="spinner-border spinner-border-sm" role="status"></span>
               ) : (
                 <>
-                  <span>Create Account</span>
+                  <span>CREATE ACCOUNT</span>
                   <ArrowRight size={18} />
                 </>
               )}
             </button>
           </form>
 
-          <div className="text-center fs-7 text-muted">
+          <div className="text-center fs-7 text-secondary">
             Already registered?{' '}
-            <Link to="/login" className="text-primary text-decoration-none fw-semibold">
+            <Link to="/login" className="text-primary text-decoration-none fw-bold">
               Sign In Here
             </Link>
           </div>
